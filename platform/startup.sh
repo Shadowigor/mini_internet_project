@@ -146,19 +146,19 @@ time ./setup/measurement_setup.sh "${DIRECTORY}"
 echo ""
 echo ""
 
+echo "ssh_setup.sh $(($(date +%s%N)/1000000))" >> "${DIRECTORY}"/log.txt
+echo "ssh_setup.sh: "
+time ./setup/ssh_setup.sh "${DIRECTORY}"
+
+echo ""
+echo ""
+
 echo "echo \"ssh links\"" >> "${DIRECTORY}"/groups/ip_setup.sh
 if [[ -f "${DIRECTORY}/config/allowed_containers.txt" ]]; then
     echo "ssh_setup_master.sh $(($(date +%s%N)/1000000))" >> "${DIRECTORY}"/log.txt
     echo "ssh_setup_master.sh: "
     time ./setup/ssh_setup_master.sh "${DIRECTORY}"
 fi
-
-echo ""
-echo ""
-
-echo "ssh_setup.sh $(($(date +%s%N)/1000000))" >> "${DIRECTORY}"/log.txt
-echo "ssh_setup.sh: "
-time ./setup/ssh_setup.sh "${DIRECTORY}"
 
 echo ""
 echo ""

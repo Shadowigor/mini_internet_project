@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 # Directory where the config is located
 DIR="$1"
 
@@ -22,6 +24,7 @@ docker cp "$SSH_KEY" ssh_master:/root/.ssh/id_rsa
 passwd="$(openssl rand -hex 8)"
 echo -e "${passwd}\n${passwd}" | docker exec -i ssh_master passwd root
 echo -e "${passwd}\n${passwd}" | docker exec -i ssh_master service ssh restart
+echo "$passwd" > groups/ssh_master_passwd.txt
 
 # Copy the network config files for the goto.sh script to the container
 docker cp "${DIR}/config/allowed_containers.txt" ssh_master:/root/.allowed_containers.txt
@@ -30,6 +33,11 @@ docker cp "${DIR}/config/subnet_config.sh" ssh_master:/root/.subnet_config.sh
 # Add a port for the ssh container
 subnet="$(subnet_sshContainer_groupContainer 0 -1 -1 "sshContainer" 1)"
 ./setup/ovs-docker.sh add-port ssh_master ssh_master ssh_master --ipaddress="${subnet}"
+
+# Connect the container to the main host
+subnet_host="$(subnet_ext_sshContainer 0 "sshContainer")"
+./setup/ovs-docker.sh add-port ssh_to_group ssh_in ssh_master --ipaddress="$subnet_host"
+docker cp groups/authorized_keys ssh_master:/root/.ssh/authorized_keys
 
 # Add ports for all other containers
 for CONTAINER in "${CONTAINERS[@]}"; do

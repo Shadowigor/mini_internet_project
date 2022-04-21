@@ -15,6 +15,17 @@ group_numbers=${#groups[@]}
 
 declare -a CONTAINERS
 
+# Start master ssh container
+if [[ -f "${DIRECTORY}/config/allowed_containers.txt" ]]; then
+    echo "setting up master ssh container"
+    docker run -itd --net='none' --name="ssh_master" \
+        --cpus=2 --pids-limit 100 --hostname="ssh_master" --cap-add=NET_ADMIN \
+        -v /etc/timezone:/etc/timezone:ro \
+        -v /etc/localtime:/etc/localtime:ro \
+        kohlia/aon-ssh:latest
+fi
+
+
 #create all container
 for ((k=0;k<group_numbers;k++)); do
     group_k=(${groups[$k]})

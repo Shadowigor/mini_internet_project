@@ -22,6 +22,9 @@ group_numbers=${#groups[@]}
 # bridge for connection from host to ssh containers
 echo -n "-- --if-exists del-br ssh_to_group " >> "${DIRECTORY}"/ovs_command.txt
 
+# bridge for the master ssh container
+echo -n "-- --if-exists del-br ssh_master " >> "${DIRECTORY}"/ovs_command.txt
+
 for ((k=0;k<group_numbers;k++)); do
   group_k=(${groups[$k]})
   group_number="${group_k[0]}"

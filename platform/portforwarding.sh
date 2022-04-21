@@ -35,5 +35,12 @@ fi
 subnet=$(subnet_ext_sshContainer "${group_number}" "MEASUREMENT")
 ssh -i groups/id_rsa -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking no" -f -N -L 0.0.0.0:2099:"${subnet%/*}":22 root@${subnet%/*}
 
+# master ssh
+if command -v ufw > /dev/null 2>&1; then
+    ufw allow 2000
+fi
+subnet=$(subnet_ext_sshContainer 0 "sshContainer")
+ssh -i groups/id_rsa -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking no" -f -N -L 0.0.0.0:2000:"${subnet%/*}":22 root@${subnet%/*}
+
 
 # for pid in $(ps aux | grep ssh | grep StrictHostKeyChecking | tr -s ' ' | cut -f 2 -d ' '); do sudo kill -9 $pid; done

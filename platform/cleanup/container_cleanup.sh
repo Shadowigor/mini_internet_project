@@ -85,6 +85,7 @@ for ((k=0;k<group_numbers;k++)); do
 
 done
 
+docker kill ssh_master &>/dev/null || true &
 docker kill DNS &>/dev/null || true &
 docker kill MEASUREMENT &>/dev/null || true &
 docker kill MATRIX &>/dev/null || true &

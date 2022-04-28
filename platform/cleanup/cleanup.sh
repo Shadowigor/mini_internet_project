@@ -36,6 +36,8 @@ echo -n "ovs-vsctl " > ovs_command.txt
 bash  < ovs_command.txt || true
 rm -f ovs_command.txt
 
+bash < groups/delete_veth_pairs.sh 2> /dev/null || true
+
 # delete old running config files
 if [ -e groups ]; then
   rm -rf groups

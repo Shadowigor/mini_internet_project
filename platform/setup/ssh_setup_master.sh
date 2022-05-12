@@ -43,12 +43,9 @@ docker cp groups/authorized_keys ssh_master:/root/.ssh/authorized_keys
 for CONTAINER in "${CONTAINERS[@]}"; do
     # Split up the container name
     IFS=',' read -ra SPLIT <<< "$CONTAINER"
-    AS="${SPLIT[0]}"
-    ROUTER="${SPLIT[1]}"
-    DEVICE="${SPLIT[2]}"
-    ROUTERNR="${SPLIT[3]}"
+    NAME="${SPLIT[0]}"
+    IP="${SPLIT[1]}"
 
-    subnet="$(subnet_sshContainer_groupContainer "$AS" "$ROUTERNR" -1 "$DEVICE" 1)"
-    ./setup/ovs-docker.sh add-port ssh_master ssh_master "${AS}_${ROUTER}${DEVICE}" --ipaddress="${subnet}"
-    docker cp "${SSH_KEY}.pub" "${AS}_${ROUTER}${DEVICE}":/root/.ssh/authorized_keys2
+    ./setup/ovs-docker.sh add-port ssh_master ssh_master "${NAME}" --ipaddress="${IP}/8"
+    docker cp "${SSH_KEY}.pub" "${NAME}":/root/.ssh/authorized_keys2
 done

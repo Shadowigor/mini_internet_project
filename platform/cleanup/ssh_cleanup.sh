@@ -36,7 +36,7 @@ for ((k=0;k<group_numbers;k++)); do
   fi
 done
 
-for pid in $(sudo ps aux | grep '157.0.0.11' | awk "{print \$2}" | xargs)
+for pid in $(ps aux | grep '157.0.0.11' | awk "{print \$2}" | xargs)
 do
-    sudo kill -9 $pid &> /dev/null || true
+    kill -9 $pid &> /dev/null || true
 done
